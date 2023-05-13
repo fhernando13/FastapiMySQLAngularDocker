@@ -2,8 +2,7 @@ from fastapi import APIRouter
 from config.conexion import conn
 from models.modelUser import users
 from schemas.schemaUser import userSchema
-from config.conexion import engine
-
+import json
 
 user = APIRouter()
 
@@ -14,10 +13,9 @@ def index():
 
 
 @user.get('/api/allUsers')
-async def get_users():
-    with engine.connect() as conn:     
-        result = conn.execute(users.select()).fetchall()
-        return result
+def get_users():        
+    results = conn.execute(users.select()).fetchall()
+    return results
           
           
 @user.get('/user')
@@ -31,10 +29,9 @@ def add_user(user: userSchema):
         new_user = {"name":user.name, "lastname":user.lastname, "email":user.email, "age":user.age}
         conn.execute(users.insert().values(new_user))
         conn.commit()
-        conn.close()
         return "add user"
     except Exception as e:
-        return print("Error: ",e, status_code=400) 
+        return print(f'Error: {e}', status_code=400) 
 
 
 @user.put('/update_user')
