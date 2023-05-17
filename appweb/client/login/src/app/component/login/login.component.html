@@ -31,31 +31,39 @@
                 </div>
                                 
                 <mat-card-content>
-                    <form class="example-form">
+                    <form [formGroup]="loginForm" (ngSubmit)="logIn()" class="example-form">
+                        
                         <mat-form-field class="example-full-width">
                           <mat-label>USERNAME</mat-label>
-                          <input matInput placeholder="HERE YOUR USER@EMAIL.COM" >
+                          <input  type="text" matInput formControlName="email" placeholder="HERE YOUR USER@EMAIL.COM" >
                         </mat-form-field>
                       
                         <mat-form-field class="example-full-width" >
                             <mat-label>PASSWORD</mat-label>
-                            <!-- <input type="password" matInput placeholder="MY PASSWORD" > -->
-                            <input type="password" matInput placeholder="HERE YOUR PASSWORD" >
-                          </mat-form-field>
-                      </form>
-                </mat-card-content>
-                <div class="row">
-                    <div class="col-md-4">
-
-                    </div>
-                    <div class="col-md-4">
+                            <input type="password" matInput formControlName="password" placeholder="HERE YOUR PASSWORD">                      
+                        </mat-form-field> 
+                        
                         <mat-card-actions >
                             <button mat-raised-button color="primary">LOGGIN</button>
-                        </mat-card-actions> 
-                    </div>
-                    <div class="col-md-4">
+                        </mat-card-actions>
 
+                    </form>
+                </mat-card-content>
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <!-- empty -->
                     </div>
+
+                    <div class="col-md-4">
+                             
+                        </div>
+                    
+                    <div class="col-md-4">
+                        <!-- empty -->
+                    </div>
+
                 </div>
                                                
             </mat-card>

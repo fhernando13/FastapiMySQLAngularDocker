@@ -1,11 +1,11 @@
 from fastapi import APIRouter
-from config.conexion import conn, engine
+from config.conexion import engine
 from models.modelUser import users
-from schemas.schemaUser import userSchema, userLogin
+from schemas.schemaUser import schemaUsers
 from fastapi.responses import Response
-from fastapi import FastAPI, HTTPException
+from fastapi import HTTPException
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from typing import List
 
 
@@ -17,7 +17,7 @@ def index():
     return "Welcome to the FastAPI"
 
 
-@user.get('/api/users/all_users', response_model=List[userSchema])
+@user.get('/api/users/all_users', response_model=List[schemaUsers])
 def get_users():      
     with engine.connect() as condb:  
         results = condb.execute(users.select()).fetchall()
@@ -25,7 +25,7 @@ def get_users():
         return results
         
           
-@user.get('/api/users/one_user/{id}', response_model=userSchema)
+@user.get('/api/users/one_user/{id}', response_model=schemaUsers)
 def get_user(id: str):
     with engine.connect() as condb:
         result = condb.execute(users.select().where(users.c.id == id)).first()
@@ -35,7 +35,7 @@ def get_user(id: str):
      
 
 @user.post('/api/users/add_user', status_code=HTTP_201_CREATED)
-def add_user(user: userSchema):
+def add_user(user: schemaUsers):
     with engine.connect() as condb:
         new_user = user.dict()
         new_user["password"] = generate_password_hash(user.password, "pbkdf2:sha256:30", 30)
@@ -43,8 +43,8 @@ def add_user(user: userSchema):
         return Response(status_code=HTTP_201_CREATED)
         
 
-@user.put('/api/users/update_user/{id}', response_model=userSchema)
-def update_user(data_update: userSchema, id: str):
+@user.put('/api/users/update_user/{id}', response_model=schemaUsers)
+def update_user(data_update: schemaUsers, id: str):
     with engine.connect() as condb:
         encryp_password  = generate_password_hash(data_update.password, "pbkdf2:sha256:30", 30)
         query = condb.execute(users.select().where(users.c.id == id)).first()
@@ -66,16 +66,3 @@ def delete_user(id: str):
         condb.execute(users.delete().where(users.c.id == id))
         return Response(status_code=HTTP_204_NO_CONTENT)
 
-@user.post("/api/users/login")
-def user_login(data_user: userLogin):
-    with engine.connect() as condb:
-        result = condb.execute(users.select().where(users.c.email == data_user.email)).first()
-
-        if result != None:
-            check_password = check_password_hash(result[5], data_user.password)
-            if check_password != True:
-                return "Password incorrect"
-            else:
-                return "Success"
-        else:
-            return "User not exist"
