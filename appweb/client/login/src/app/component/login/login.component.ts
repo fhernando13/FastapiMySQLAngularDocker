@@ -40,10 +40,17 @@ export class LoginComponent implements OnInit {
       console.log("hello")
   }
 
-  logIn() {
-    console.log(this.email.value)
-    console.log(this.password.value)
-  }
+  logIn() 
+  {    
+    if(this.loginForm != null){
+      this.loginService.login(this.loginForm.value).subscribe({
+        next: res => this.loginForm.value = console.log("logeado"),
+        error: (err) => console.log(err)
+      })
+    }    
+    return console.log("hello"); 
+    }//back to home
+    
 
 
 }

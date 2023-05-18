@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../models/user';
+import { Login } from '../models/login';
 import { environment } from 'src/environments/environment.prod';;
 
 @Injectable({
@@ -15,8 +15,8 @@ export class LoginService {
 
   }
 
-  login(user: User){
-    return this.http.get(this.API_URI+'login');
+  login(logged: Login){
+    return this.http.post(this.API_URI+'login', logged);
   }
   
 }
