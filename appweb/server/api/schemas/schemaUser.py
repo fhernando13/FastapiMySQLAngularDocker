@@ -6,6 +6,8 @@ class schemaUsers(BaseModel):
     id: Optional[str]
     name: str
     lastname: str
+    phonework: Optional[str]
+    phonepersonal: str
+    birthdate: str
     email: str
-    age: str
     password: str
